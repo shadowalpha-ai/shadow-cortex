@@ -1,0 +1,101 @@
+{
+  "scenario": 3,
+  "mode": "paper",
+  "execution": "confirm",
+  "decider": "rules",
+  "caps": {
+    "maxSharesPerOrder": 10,
+    "maxOpenPositions": 5,
+    "maxDollarsPerPosition": 500,
+    "maxDailyLoss": 100
+  },
+  "cadence": {
+    "intakePollMs": 5000,
+    "managementPollMs": 2000
+  },
+  "marketHoursOnly": true,
+  "signalTtlMinutes": 10,
+  "dedupeWindowMinutes": 5,
+  "sources": [
+    {
+      "type": "shadowalpha",
+      "transport": "fixture",
+      "minStrength": 0.3
+    },
+    {
+      "type": "shadowalpha-portfolio",
+      "transport": "fixture",
+      "portfolios": [
+        "Momentum"
+      ],
+      "listRefreshMinutes": 15
+    }
+  ],
+  "entry": {
+    "rules": [
+      {
+        "label": "ShadowAlpha buzz + analyst-backed",
+        "source": "shadowalpha",
+        "symbols": [],
+        "constraints": [
+          {
+            "field": "type",
+            "op": "==",
+            "value": "consensus"
+          },
+          {
+            "field": "analystRating",
+            "op": ">=",
+            "value": 55
+          },
+          {
+            "field": "spikeRatio",
+            "op": ">=",
+            "value": 8
+          }
+        ]
+      },
+      {
+        "label": "Follow the Momentum curation (demo)",
+        "source": "shadowalpha-portfolio",
+        "symbols": [],
+        "constraints": []
+      }
+    ],
+    "symbolBlocklist": [],
+    "rejectionCooldownMinutes": 30,
+    "minRewardRiskRatio": null
+  },
+  "exit": {
+    "stopLossPct": 5,
+    "trailingStopPct": 7,
+    "takeProfitPct": 15,
+    "trailActivationPct": null,
+    "maxHoldDays": null,
+    "atrStopMultiplier": null,
+    "atrPeriod": 14,
+    "breakevenDays": null,
+    "breakevenMinMovePct": null,
+    "partialTpPct": null,
+    "partialCloseFraction": 0.5,
+    "rejectionCooldownMinutes": null
+  },
+  "sizing": {
+    "mode": "fixedDollar",
+    "value": 25,
+    "allowFractionalShares": true
+  },
+  "executionBehavior": {
+    "priceBandPct": 1,
+    "proposalTtlMinutes": 30
+  },
+  "quoteSource": "fixture",
+  "paper": {
+    "startingCash": 10000,
+    "seedPositions": []
+  },
+  "ui": {
+    "enabled": true,
+    "port": 7777
+  }
+}

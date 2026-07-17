@@ -1,0 +1,59 @@
+{
+  "_note": "Synthetic fixture shaped like the live ShadowAlpha search_predictions/get_analyst tools (shapes captured live). Timestamps intentionally omitted where the adapter stamps poll time is NOT the case here — predictions carry real post timestamps upstream; the fixture uses recent-looking ones and the demo relies on signalTtl generosity or fresh dedupe.",
+  "search_predictions": {
+    "predictions": [
+      {
+        "id": 316937,
+        "source_id": "fixture-pred-1",
+        "channel_handle": "KawzInvests",
+        "post_timestamp": null,
+        "symbol": "NVDA",
+        "direction": "bullish",
+        "target_price": 240.0,
+        "entry_price": 212.5,
+        "confidence": 0.75,
+        "specificity_tier": 1,
+        "raw_quote": "NVDA setting up for a breakout — accumulating here."
+      },
+      {
+        "id": 316938,
+        "source_id": "fixture-pred-2",
+        "channel_handle": "Brownmoose",
+        "post_timestamp": null,
+        "symbol": "PLTR",
+        "direction": "bullish",
+        "target_price": null,
+        "entry_price": 152.3,
+        "confidence": 0.6,
+        "specificity_tier": 2,
+        "raw_quote": "PLTR looks strong into the print."
+      },
+      {
+        "id": 316939,
+        "source_id": "fixture-pred-3",
+        "channel_handle": "Brownmoose",
+        "post_timestamp": null,
+        "symbol": "TSLA",
+        "direction": "bearish",
+        "target_price": 200.0,
+        "entry_price": 244.1,
+        "confidence": 0.8,
+        "specificity_tier": 1,
+        "raw_quote": "TSLA rolling over — taking profits."
+      }
+    ]
+  },
+  "get_analyst": {
+    "analyst": {
+      "channel_handle": "KawzInvests",
+      "active": true,
+      "total_predictions": 306,
+      "wins": 182,
+      "losses": 1,
+      "win_rate_pct": 99.1,
+      "blended_win_rate": 86.1,
+      "rating_score": 68.4,
+      "portfolio_performance_pct": 23.9
+    }
+  }
+}

@@ -1,0 +1,74 @@
+{
+  "scenario": 2,
+  "mode": "paper",
+  "execution": "auto",
+  "decider": "claude",
+  "quoteSource": "shadowalpha",
+  "marketHoursOnly": true,
+  "cadence": {
+    "intakePollMs": 300000,
+    "managementPollMs": 60000
+  },
+  "sources": [
+    {
+      "type": "shadowalpha",
+      "transport": "live",
+      "minStrength": 0.4
+    }
+  ],
+  "entry": {
+    "rules": [
+      {
+        "label": "consensus",
+        "source": null,
+        "symbols": [],
+        "constraints": [
+          {
+            "field": "strength",
+            "op": ">=",
+            "value": 0.4
+          },
+          {
+            "field": "window.distinctSources",
+            "op": ">=",
+            "value": 2
+          }
+        ]
+      },
+      {
+        "label": "strong signal",
+        "source": null,
+        "symbols": [],
+        "constraints": [
+          {
+            "field": "strength",
+            "op": ">=",
+            "value": 0.4
+          },
+          {
+            "field": "window.maxStrength",
+            "op": ">=",
+            "value": 0.75
+          }
+        ]
+      }
+    ]
+  },
+  "exit": {
+    "stopLossPct": 5,
+    "trailingStopPct": 7,
+    "takeProfitPct": 15,
+    "maxHoldDays": 4.0
+  },
+  "sizing": {
+    "mode": "fixedDollar",
+    "value": 25,
+    "allowFractionalShares": true
+  },
+  "caps": {
+    "maxSharesPerOrder": 5,
+    "maxOpenPositions": 4,
+    "maxDollarsPerPosition": 100,
+    "maxDailyLoss": 50
+  }
+}

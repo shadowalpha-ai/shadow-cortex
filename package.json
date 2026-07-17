@@ -1,0 +1,34 @@
+{
+  "name": "shadow-cortex",
+  "version": "0.1.0",
+  "description": "Open-source, self-hosted template for an AI-managed automated trading engine. Reference implementation \u2014 not investment advice, use at your own risk.",
+  "type": "module",
+  "license": "MIT",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "dev": "tsx src/tools/supervise.ts --profile profiles/scenario3.json",
+    "start": "tsx src/tools/supervise.ts",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "validate-profile": "tsx src/tools/validate-profile.ts",
+    "ui:dev": "npm --prefix ui run dev",
+    "ui:build": "npm --prefix ui install && npm --prefix ui run build",
+    "robinhood:connect": "tsx src/tools/robinhood-connect.ts",
+    "mcp": "tsx src/tools/mcp-server.ts",
+    "docs:fields": "tsx src/tools/generate-field-docs.ts"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.110.0",
+    "@modelcontextprotocol/sdk": "^1.12.0",
+    "zod": "^3.24.0",
+    "esbuild": "^0.28.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.6.0",
+    "vitest": "^3.0.0"
+  }
+}

@@ -1,0 +1,57 @@
+{
+  "get_stock_ideas": {
+    "ideas": [
+      {
+        "symbol": "NVDA",
+        "sector": "AI/Software",
+        "buzz": 4.1,
+        "opp": 82,
+        "price": 185.4,
+        "day_pct": 1.2,
+        "bullish_count": 14,
+        "bearish_count": 3,
+        "avg_confidence": 0.71,
+        "avg_analyst_rating": 62.4,
+        "buy_zone_active": true,
+        "tags": ["AI", "Semis"],
+        "spike_ratio": 9.5,
+        "recent_3d_sources": 8,
+        "is_new_entrant": false
+      },
+      {
+        "symbol": "PLTR",
+        "sector": "AI/Software",
+        "buzz": 2.8,
+        "opp": 55,
+        "price": 152.3,
+        "day_pct": 0.0,
+        "bullish_count": 8,
+        "bearish_count": 5,
+        "avg_confidence": 0.58,
+        "avg_analyst_rating": 46.7,
+        "buy_zone_active": false,
+        "tags": ["AI", "Software"],
+        "spike_ratio": 12,
+        "recent_3d_sources": 4,
+        "is_new_entrant": false
+      },
+      {
+        "symbol": "TSLA",
+        "sector": "Autos",
+        "buzz": 1.9,
+        "opp": -60,
+        "price": 244.1,
+        "day_pct": -0.8,
+        "bullish_count": 4,
+        "bearish_count": 11,
+        "avg_confidence": 0.6,
+        "avg_analyst_rating": 44.1,
+        "buy_zone_active": false,
+        "tags": ["EV"],
+        "spike_ratio": 7,
+        "recent_3d_sources": 5,
+        "is_new_entrant": true
+      }
+    ]
+  }
+}

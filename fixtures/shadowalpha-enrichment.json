@@ -1,0 +1,29 @@
+{
+  "_note": "Synthetic fixture shaped like the live get_conviction/get_symbol_predictions tools (shapes captured 2026-07-16). One canned response per tool — every symbol gets the same answer in fixture mode, which is fine for the offline demo.",
+  "get_conviction": {
+    "symbol": "NVDA",
+    "analyzed": true,
+    "bull_case": [
+      { "headline": "Dominant GPU moat drives upside targets", "high_rated": true },
+      { "headline": "Only AI company actually printing money", "high_rated": false },
+      { "headline": "Datacenter demand still accelerating", "high_rated": false }
+    ],
+    "bear_case": [
+      { "headline": "Chart structure signals downside", "high_rated": false },
+      { "headline": "AI trade rotation raises near-term pressure", "high_rated": false }
+    ],
+    "consensus_count": 24,
+    "avg_shadow_score": 46.7,
+    "avg_confidence": 0.64,
+    "buy_zone_active": true
+  },
+  "get_symbol_predictions": {
+    "symbol": "NVDA",
+    "predictions": [
+      { "id": 1, "direction": "bullish", "confidence": 0.7, "pnl_pct": 2.1 },
+      { "id": 2, "direction": "bullish", "confidence": 0.75, "pnl_pct": 0.4 },
+      { "id": 3, "direction": "bullish", "confidence": 0.6, "pnl_pct": -1.2 },
+      { "id": 4, "direction": "bearish", "confidence": 0.65, "pnl_pct": 3.3 }
+    ]
+  }
+}

@@ -1,0 +1,156 @@
+{
+  "_note": "Synthetic fixture shaped exactly like the live ShadowAlpha portfolio tools (shapes captured 2026-07-15). entry_date/exit_date are null so the adapter stamps poll time and the zero-credential demo never goes stale against signalTtlMinutes. The option-leg and BTC-USD rows exist to demo the adapter's skip path. Replays identically every poll \u2014 stable dedupe keys make that idempotent.",
+  "list_portfolios": {
+    "portfolios": [
+      {
+        "id": 12,
+        "name": "Momentum",
+        "status": "active",
+        "is_public": false,
+        "starting_capital": 10000.0,
+        "position_size": 10.0,
+        "position_size_type": "pct",
+        "open_positions": 4,
+        "closed_positions": 38,
+        "last_entry_at": "2026-07-14T14:31:00+00:00",
+        "latest_trade_id": 40,
+        "current_value": 12480.55,
+        "last_snapshot_date": "2026-07-15",
+        "tracks": [
+          {
+            "type": "curation",
+            "name": "Momentum"
+          }
+        ],
+        "performance": {
+          "total_return_pct": 24.8,
+          "avg_monthly_return_pct": 5.7,
+          "annualized_return_pct": 94.4,
+          "months_active": 4.0,
+          "max_drawdown_pct": -9.1,
+          "closed_trades": 38,
+          "win_rate_pct": 63.2,
+          "avg_trade_return_pct": 2.1,
+          "avg_trade_pnl": 24.6,
+          "total_realized_pnl": 934.8
+        }
+      },
+      {
+        "id": 9,
+        "name": "Paused Experiments",
+        "status": "paused",
+        "is_public": false,
+        "starting_capital": 10000.0,
+        "position_size": 1000.0,
+        "position_size_type": "fixed",
+        "open_positions": 0,
+        "closed_positions": 0,
+        "last_entry_at": null,
+        "latest_trade_id": 0,
+        "current_value": null,
+        "last_snapshot_date": null,
+        "tracks": [],
+        "performance": {
+          "total_return_pct": null,
+          "avg_monthly_return_pct": null,
+          "annualized_return_pct": null,
+          "months_active": null,
+          "max_drawdown_pct": null,
+          "closed_trades": 0,
+          "win_rate_pct": null,
+          "avg_trade_return_pct": null,
+          "avg_trade_pnl": null,
+          "total_realized_pnl": null
+        }
+      }
+    ],
+    "note": "Pick one and poll get_portfolio_signals with its id or name."
+  },
+  "get_portfolio_signals": {
+    "portfolio": {
+      "id": 12,
+      "name": "Momentum",
+      "status": "active"
+    },
+    "new_entries": [
+      {
+        "id": 41,
+        "symbol": "NVDA",
+        "direction": "bullish",
+        "entry_price": 186.2,
+        "quantity": 6.7,
+        "entry_date": null,
+        "status": "open",
+        "source": "auto_follow",
+        "prediction_id": null,
+        "strike_price": null,
+        "option_expiry": null,
+        "option_type": null
+      },
+      {
+        "id": 42,
+        "symbol": "PLTR",
+        "direction": "bullish",
+        "entry_price": 152.1,
+        "quantity": 8.2,
+        "entry_date": null,
+        "status": "open",
+        "source": "auto_follow",
+        "prediction_id": null,
+        "strike_price": null,
+        "option_expiry": null,
+        "option_type": null
+      },
+      {
+        "id": 43,
+        "symbol": "BTC-USD",
+        "direction": "bullish",
+        "entry_price": 74210.0,
+        "quantity": 0.016,
+        "entry_date": null,
+        "status": "open",
+        "source": "auto_follow",
+        "prediction_id": null,
+        "strike_price": null,
+        "option_expiry": null,
+        "option_type": null
+      },
+      {
+        "id": 44,
+        "symbol": "TSLA",
+        "direction": "bullish",
+        "entry_price": 4.35,
+        "quantity": 2,
+        "entry_date": null,
+        "status": "open",
+        "source": "auto_follow",
+        "prediction_id": null,
+        "strike_price": 250.0,
+        "option_expiry": "2026-08-21",
+        "option_type": "call"
+      }
+    ],
+    "new_exits": [
+      {
+        "id": 39,
+        "symbol": "HOOD",
+        "direction": "bullish",
+        "entry_price": 64.1,
+        "quantity": 3.9,
+        "entry_date": null,
+        "exit_date": null,
+        "status": "closed",
+        "source": "auto_follow",
+        "prediction_id": null,
+        "strike_price": null,
+        "option_expiry": null,
+        "option_type": null
+      }
+    ],
+    "cursors": {
+      "last_id": 44,
+      "last_exit_date": "2026-07-15T13:45:00+00:00"
+    },
+    "note": "Entries appear within ~5 minutes of the engine opening a position."
+  }
+}

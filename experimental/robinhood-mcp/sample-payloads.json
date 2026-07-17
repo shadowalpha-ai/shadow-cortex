@@ -1,0 +1,321 @@
+{
+  "_note": "CAPTURED LIVE 2026-07-15 from the official Robinhood agentic-trading MCP, then scrubbed (account numbers, nicknames, balances replaced; long display-guide strings elided). get_equity_positions came back empty on the fresh agentic account, so its sample row is synthesized from the response's own field guide \u2014 re-capture once a position exists. review/place_equity_order responses are still UNVERIFIED guesses (write tools; capture requires placing a real order).",
+  "get_accounts": {
+    "data": {
+      "accounts": [
+        {
+          "account_number": "MAIN00001",
+          "rhs_account_number": "MAIN00001",
+          "type": "margin",
+          "brokerage_account_type": "individual",
+          "is_default": true,
+          "agentic_allowed": false,
+          "option_level": "option_level_3",
+          "management_type": "self_directed",
+          "state": "active",
+          "deactivated": false,
+          "permanently_deactivated": false
+        },
+        {
+          "account_number": "AGENTIC001",
+          "rhs_account_number": "AGENTIC001",
+          "type": "cash",
+          "brokerage_account_type": "individual",
+          "nickname": "Agentic",
+          "is_default": false,
+          "agentic_allowed": true,
+          "option_level": "",
+          "management_type": "self_directed",
+          "state": "active",
+          "deactivated": false,
+          "permanently_deactivated": false
+        }
+      ]
+    },
+    "guide": "(display-guide text elided \u2014 key fact: agentic_allowed is caller-relative; only true accounts are actionable by this agent)"
+  },
+  "get_portfolio": {
+    "data": {
+      "total_value": "50.00",
+      "equity_value": "0",
+      "options_value": "0",
+      "futures_value": "0",
+      "event_contracts_value": "0",
+      "crypto_value": "0",
+      "cash": "50.00",
+      "pending_deposits": "0",
+      "mutual_funds_value": "0",
+      "fixed_income_value": "0",
+      "currency": "USD",
+      "buying_power": {
+        "buying_power": "50.0000",
+        "unleveraged_buying_power": "50.0000",
+        "display_currency": "USD"
+      }
+    },
+    "guide": "(elided \u2014 buying_power.buying_power is the authoritative spendable figure)"
+  },
+  "get_equity_positions": {
+    "data": {
+      "positions": [
+        {
+          "_synthetic": true,
+          "symbol": "NVDA",
+          "quantity": "0.25",
+          "intraday_quantity": "0",
+          "shares_available_for_sells": "0.25",
+          "average_buy_price": "200.00",
+          "type": "long"
+        }
+      ]
+    },
+    "guide": "(elided \u2014 no market price on rows; join with get_equity_quotes; average_buy_price may be omitted while reconciling)"
+  },
+  "get_equity_orders": {
+    "data": {
+      "orders": []
+    },
+    "guide": "(elided \u2014 dollar-based orders may have null quantity; placed_agent marks agent-placed orders)"
+  },
+  "get_equity_tradability": {
+    "data": {
+      "results": [
+        {
+          "symbol": "NVDA",
+          "name": "NVIDIA Corporation Common Stock",
+          "state": "active",
+          "tradeable": true,
+          "fractional_tradability": "tradable",
+          "account_type_tradabilities": [
+            {
+              "account_type": "individual",
+              "account_type_tradability": "tradable"
+            }
+          ]
+        }
+      ]
+    },
+    "guide": "(elided \u2014 fractional/dollar orders place only in regular hours)"
+  },
+  "get_equity_quotes": {
+    "data": {
+      "results": [
+        {
+          "quote": {
+            "symbol": "NVDA",
+            "last_trade_price": "211.790000",
+            "venue_last_trade_time": "2026-07-14T19:59:59.998102916Z",
+            "last_non_reg_trade_price": "211.570000",
+            "venue_last_non_reg_trade_time": "2026-07-15T11:35:10.749870786Z",
+            "adjusted_previous_close": "211.800000",
+            "previous_close": "211.800000",
+            "previous_close_date": "2026-07-14",
+            "bid_price": "211.500000",
+            "ask_price": "211.580000",
+            "has_traded": true,
+            "state": "active"
+          },
+          "close": {
+            "symbol": "NVDA",
+            "date": "2026-07-14",
+            "price": "211.8",
+            "interpolated": false
+          }
+        },
+        {
+          "quote": {
+            "symbol": "PLTR",
+            "last_trade_price": "133.750000",
+            "venue_last_trade_time": "2026-07-14T19:59:59.995632798Z",
+            "last_non_reg_trade_price": "134.279900",
+            "venue_last_non_reg_trade_time": "2026-07-15T11:35:41.802501817Z",
+            "adjusted_previous_close": "133.720000",
+            "previous_close": "133.720000",
+            "previous_close_date": "2026-07-14",
+            "bid_price": "133.910000",
+            "ask_price": "134.310000",
+            "has_traded": true,
+            "state": "active"
+          },
+          "close": {
+            "symbol": "PLTR",
+            "date": "2026-07-14",
+            "price": "133.72",
+            "interpolated": false
+          }
+        }
+      ]
+    },
+    "guide": "(elided \u2014 current price = freshest of last_trade_price / last_non_reg_trade_price by venue timestamp)"
+  },
+  "review_equity_order": {
+    "_unverified": true,
+    "review_id": "rev_demo_123",
+    "warnings": []
+  },
+  "place_equity_order": {
+    "_unverified": true,
+    "state": "filled",
+    "average_price": "211.80",
+    "cumulative_quantity": "1",
+    "updated_at": "2026-07-15T17:30:00Z"
+  },
+  "get_equity_technical_indicators": {
+    "_captured": "2026-07-17 live via engine OAuth (NVDA, day interval); series trimmed to last 3 points",
+    "_valid_types": [
+      "ema",
+      "sma",
+      "rsi",
+      "momentum",
+      "roc",
+      "cci",
+      "williams_r",
+      "atr",
+      "mfi",
+      "adx",
+      "donchian_channels",
+      "bollinger_bands",
+      "macd",
+      "keltner_channels",
+      "supertrend",
+      "vwap",
+      "obv",
+      "pivot_points"
+    ],
+    "_notes": "type 'bollinger' is REJECTED \u2014 wire name is bollinger_bands. Points: rsi/sma/ema={begins_at,value}; macd={begins_at,histogram,macd,signal}; bollinger_bands={begins_at,lower,middle,upper}. Values are numbers (not strings, unlike account endpoints).",
+    "rsi14": {
+      "args": {
+        "symbol": "NVDA",
+        "type": "rsi",
+        "interval": "day",
+        "start_time": "2026-04-18T08:56:50.358Z",
+        "period": 14
+      },
+      "response": {
+        "data": {
+          "symbol": "NVDA",
+          "interval": "day",
+          "bounds": "regular",
+          "indicators": [
+            {
+              "type": "rsi",
+              "params": {
+                "period": 14
+              },
+              "series": [
+                {
+                  "begins_at": "2026-07-14T00:00:00Z",
+                  "value": 56.551541622311596
+                },
+                {
+                  "begins_at": "2026-07-15T00:00:00Z",
+                  "value": 57.05932265383356
+                },
+                {
+                  "begins_at": "2026-07-16T00:00:00Z",
+                  "value": 52.26659117337204
+                }
+              ]
+            }
+          ]
+        },
+        "guide": "(elided)"
+      }
+    },
+    "macd": {
+      "args": {
+        "symbol": "NVDA",
+        "type": "macd",
+        "interval": "day",
+        "start_time": "2026-04-18T08:56:50.358Z",
+        "fast_period": 12,
+        "slow_period": 26,
+        "signal_period": 9
+      },
+      "response": {
+        "data": {
+          "symbol": "NVDA",
+          "interval": "day",
+          "bounds": "regular",
+          "indicators": [
+            {
+              "type": "macd",
+              "params": {
+                "fast_period": 12,
+                "signal_period": 9,
+                "slow_period": 26
+              },
+              "series": [
+                {
+                  "begins_at": "2026-07-14T00:00:00Z",
+                  "histogram": 1.6729222059252913,
+                  "macd": -0.5885831937252135,
+                  "signal": -2.261505399650505
+                },
+                {
+                  "begins_at": "2026-07-15T00:00:00Z",
+                  "histogram": 1.9424340831169975,
+                  "macd": 0.16653720424574203,
+                  "signal": -1.7758968788712555
+                },
+                {
+                  "begins_at": "2026-07-16T00:00:00Z",
+                  "histogram": 1.7002537294566462,
+                  "macd": 0.3494202829495521,
+                  "signal": -1.3508334465070941
+                }
+              ]
+            }
+          ]
+        },
+        "guide": "(elided)"
+      }
+    },
+    "bollinger_bands": {
+      "args": {
+        "symbol": "NVDA",
+        "type": "bollinger_bands",
+        "interval": "day",
+        "period": 20,
+        "num_std": 2
+      },
+      "response": {
+        "data": {
+          "symbol": "NVDA",
+          "interval": "day",
+          "bounds": "regular",
+          "indicators": [
+            {
+              "type": "bollinger_bands",
+              "params": {
+                "num_std": 2,
+                "period": 20
+              },
+              "series": [
+                {
+                  "begins_at": "2026-07-14T00:00:00Z",
+                  "lower": 191.1850937323039,
+                  "middle": 203.6839280779558,
+                  "upper": 216.18276242360773
+                },
+                {
+                  "begins_at": "2026-07-15T00:00:00Z",
+                  "lower": 192.01651455742908,
+                  "middle": 204.52355397529337,
+                  "upper": 217.03059339315766
+                },
+                {
+                  "begins_at": "2026-07-16T00:00:00Z",
+                  "lower": 192.29129139821302,
+                  "middle": 204.79750121574162,
+                  "upper": 217.30371103327022
+                }
+              ]
+            }
+          ]
+        },
+        "guide": "(elided)"
+      }
+    }
+  }
+}
