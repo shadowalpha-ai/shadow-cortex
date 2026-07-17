@@ -92,7 +92,8 @@ export class IntakeLoop {
     // same stale window would re-propose (and re-drop) the same trades every
     // tick — and with an AI decider, every tick would be a paid model call.
     // AI work runs on state changes, never as a hot continuous poll.
-    if (this.window.length === 0 || freshCount === 0) {
+    const retryWanted = this.decider.wantsRetry?.(now) ?? false;
+    if (this.window.length === 0 || (freshCount === 0 && !retryWanted)) {
       this.store.save();
       return;
     }

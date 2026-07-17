@@ -90,6 +90,18 @@ export function SettingsView() {
           <pre>{data.savedProfileInvalid}</pre>
         </div>
       )}
+      {(data.warnings?.length ?? 0) > 0 && (
+        <div className="banner warn">
+          Heads-up (the engine still runs, with a safe fallback):
+          <ul className="issues">
+            {data.warnings!.map((w, i) => (
+              <li key={i}>
+                <code>{w.path}</code>: {w.message}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
       {saved && (
         <div className="banner">
           Saved to <code>{saved.savedTo}</code>.{" "}

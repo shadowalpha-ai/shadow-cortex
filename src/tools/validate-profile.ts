@@ -11,6 +11,7 @@
 import { existsSync, readFileSync } from "node:fs";
 import {
   formatIssues,
+  runnableWarnings,
   parseSettingsDocument,
   runnableIssues,
   type ValidationIssue,
@@ -31,6 +32,8 @@ export function checkProfileFile(path: string): ProfileCheck {
   const parsed = parseSettingsDocument(raw);
   if (!parsed.ok) return parsed;
   const boot = runnableIssues(parsed.settings);
+  const warnings = runnableWarnings(parsed.settings);
+  for (const w of warnings) console.warn(`  ! ${w.path}: ${w.message}`);
   return boot.length > 0 ? { ok: false, issues: boot } : { ok: true };
 }
 

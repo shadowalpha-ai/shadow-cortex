@@ -128,6 +128,13 @@ export interface DecisionContext {
 export interface Decider {
   name: string;
   decide(ctx: DecisionContext): Promise<Proposal[]>;
+  /**
+   * Optional: report that the last decide() was deferred (e.g. an LLM cost
+   * throttle) and is ready to run again. The intake loop then re-decides the
+   * current window even without fresh signals — deferrals are delayed, never
+   * silently dropped.
+   */
+  wantsRetry?(now?: Date): boolean;
 }
 
 /** A signal source is a POLLER: the intake loop calls poll() every cadence tick. */

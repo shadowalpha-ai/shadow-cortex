@@ -145,3 +145,25 @@ describe("ShadowAlpha rate budget (30 req/min)", () => {
     expect(runnableIssues(fixture).find((i) => i.path === "cadence.intakePollMs")).toBeUndefined();
   });
 });
+
+describe("AI decider heads-up warning", () => {
+  it("warns when decider is claude but the engine has no ANTHROPIC_API_KEY", async () => {
+    const { runnableWarnings, DECIDER_CLAUDE_NO_KEY } = await import("../src/settings/validate.js");
+    const { makeSettings } = await import("./helpers.js");
+    const saved = process.env.ANTHROPIC_API_KEY;
+    try {
+      delete process.env.ANTHROPIC_API_KEY;
+      const claude = makeSettings({ decider: "claude" });
+      // Schema populates the cost brakes with conservative defaults.
+      expect(claude.claude).toMatchObject({ maxCallsPerDay: 500, minSecondsBetweenCalls: 30 });
+      expect(runnableWarnings(claude).map((w) => w.message)).toEqual([DECIDER_CLAUDE_NO_KEY]);
+      expect(runnableWarnings(makeSettings())).toEqual([]); // rules decider: quiet
+
+      process.env.ANTHROPIC_API_KEY = "sk-test";
+      expect(runnableWarnings(claude)).toEqual([]); // key present: quiet
+    } finally {
+      if (saved === undefined) delete process.env.ANTHROPIC_API_KEY;
+      else process.env.ANTHROPIC_API_KEY = saved;
+    }
+  });
+});

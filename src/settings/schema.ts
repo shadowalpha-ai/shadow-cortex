@@ -248,6 +248,14 @@ export const SettingsSchema = z.object({
   claude: z
     .object({
       model: z.string().default("claude-opus-4-8"),
+      /**
+       * LLM cost brakes for the AI decider (you own them; null disables).
+       * minSecondsBetweenCalls DEFERS a decision burst (the loop retries once
+       * the interval passes); maxCallsPerDay stops AI decisions for the UTC
+       * day and says so in the Event feed. Both reset on engine restart.
+       */
+      maxCallsPerDay: z.number().int().positive().nullable().default(500),
+      minSecondsBetweenCalls: z.number().int().positive().nullable().default(30),
     })
     .default({}),
   /**

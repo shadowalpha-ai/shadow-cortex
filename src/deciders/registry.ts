@@ -11,7 +11,7 @@ import { log } from "../core/log.js";
 
 export function buildDecider(settings: Settings): Decider {
   if (settings.decider === "claude") {
-    const claude = createClaudeDecider(settings.claude.model);
+    const claude = createClaudeDecider(settings.claude);
     if (claude) return claude;
     log.warn(
       'Decider "claude" requested but ANTHROPIC_API_KEY is not set — ' +

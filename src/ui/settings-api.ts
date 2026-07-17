@@ -20,6 +20,7 @@ import {
   formatIssues,
   parseSettingsDocument,
   runnableIssues,
+  runnableWarnings,
   type ValidationIssue,
 } from "../settings/validate.js";
 import { hasRobinhoodTokens } from "../execution/robinhood-oauth.js";
@@ -117,6 +118,7 @@ export class SettingsApi {
         // Freshness marker: AI clients quote this so a stale readout is
         // self-evident (a Desktop AI once reported yesterday's rules).
         asOf: new Date().toISOString(),
+        warnings: runnableWarnings(this.active),
         active: this.active,
         saved: {
           raw: this.saved.raw,
@@ -151,7 +153,12 @@ export class SettingsApi {
     if (!outcome.ok) return outcome.error;
     return {
       status: 200,
-      body: { ok: true, effective: outcome.settings, diff: diffSettings(this.active, outcome.settings) },
+      body: {
+        ok: true,
+        effective: outcome.settings,
+        diff: diffSettings(this.active, outcome.settings),
+        warnings: runnableWarnings(outcome.settings),
+      },
     };
   }
 
@@ -212,6 +219,7 @@ export class SettingsApi {
       body: {
         ok: true,
         savedTo: this.profile.path,
+        warnings: runnableWarnings(next),
         revision: this.saved.revision,
         pendingRestart: this.pendingRestart(),
         diff: diffSettings(this.active, next),

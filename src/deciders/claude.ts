@@ -10,6 +10,7 @@
 
 import Anthropic from "@anthropic-ai/sdk";
 import type { DecisionContext, Decider, Proposal } from "../core/types.js";
+import type { Settings } from "../settings/schema.js";
 import { makeId, minutesFromNow, roundMoney, roundShares } from "../core/normalize.js";
 import { sizeShares } from "../core/sizing.js";
 import { log } from "../core/log.js";
@@ -49,14 +50,35 @@ interface ClaudeDecision {
   reasoning: string;
 }
 
+type ClaudeConfig = Settings["claude"];
+
 export class ClaudeDecider implements Decider {
   readonly name = "claude";
-  private readonly client = new Anthropic();
+  private readonly client: Anthropic;
+  /** Cost-brake state — in-memory, resets on restart (documented in schema). */
+  private lastCallMs = 0;
+  private deferred = false;
+  private dayKey = "";
+  private callsToday = 0;
+  private budgetWarned = false;
 
-  constructor(private readonly model: string) {}
+  constructor(
+    private readonly config: ClaudeConfig,
+    client?: Anthropic,
+  ) {
+    this.client = client ?? new Anthropic();
+  }
+
+  /** True when a min-interval deferral is ready — the intake loop re-decides. */
+  wantsRetry(now: Date = new Date()): boolean {
+    if (!this.deferred) return false;
+    const min = this.config.minSecondsBetweenCalls;
+    return min === null || now.getTime() - this.lastCallMs >= min * 1000;
+  }
 
   async decide(ctx: DecisionContext): Promise<Proposal[]> {
     if (ctx.signals.length === 0 && ctx.positions.length === 0) return [];
+    if (!this.passesCostBrakes(ctx)) return [];
 
     const payload = {
       now: ctx.now.toISOString(),
@@ -80,7 +102,7 @@ export class ClaudeDecider implements Decider {
     };
 
     const response = await this.client.messages.create({
-      model: this.model,
+      model: this.config.model,
       max_tokens: 16000,
       thinking: { type: "adaptive" },
       system: SYSTEM,
@@ -97,6 +119,54 @@ export class ClaudeDecider implements Decider {
 
     const { decisions } = JSON.parse(text.text) as { decisions: ClaudeDecision[] };
     return this.toProposals(decisions, ctx);
+  }
+
+  /**
+   * The user-owned LLM cost brakes. A burst inside minSecondsBetweenCalls is
+   * DEFERRED: signals stay in the window and the loop retries via
+   * wantsRetry(), so bursts collapse into one batched call instead of many.
+   * A spent maxCallsPerDay budget skips LOUDLY: each blocked symbol lands in
+   * the Event feed as entry_skipped, and AI decisions resume next UTC day.
+   */
+  private passesCostBrakes(ctx: DecisionContext): boolean {
+    const nowMs = ctx.now.getTime();
+    const day = ctx.now.toISOString().slice(0, 10);
+    if (day !== this.dayKey) {
+      this.dayKey = day;
+      this.callsToday = 0;
+      this.budgetWarned = false;
+    }
+
+    const budget = this.config.maxCallsPerDay;
+    if (budget !== null && this.callsToday >= budget) {
+      this.deferred = false; // nothing to retry until the day rolls over
+      if (!this.budgetWarned) {
+        log.warn(
+          `Claude decider daily call budget (${budget}) exhausted — no AI decisions until tomorrow (UTC). Raise claude.maxCallsPerDay to change this.`,
+        );
+        this.budgetWarned = true;
+      }
+      for (const symbol of new Set(
+        ctx.signals.filter((s) => s.direction === "bullish").map((s) => s.symbol),
+      )) {
+        ctx.onSkip?.({
+          symbol,
+          reason: `AI decider daily call budget (${budget}) exhausted — resumes next UTC day`,
+        });
+      }
+      return false;
+    }
+
+    const min = this.config.minSecondsBetweenCalls;
+    if (min !== null && this.lastCallMs !== 0 && nowMs - this.lastCallMs < min * 1000) {
+      this.deferred = true; // the loop retries once the interval passes
+      return false;
+    }
+
+    this.deferred = false;
+    this.lastCallMs = nowMs;
+    this.callsToday += 1;
+    return true;
   }
 
   /** Long-only mapping enforced in code — the model cannot talk its way around it. */
@@ -171,7 +241,7 @@ export class ClaudeDecider implements Decider {
 }
 
 /** Key-gated factory: no API key → null (caller falls back to rules; fail closed). */
-export function createClaudeDecider(model: string): ClaudeDecider | null {
+export function createClaudeDecider(config: ClaudeConfig): ClaudeDecider | null {
   if (!process.env.ANTHROPIC_API_KEY) return null;
-  return new ClaudeDecider(model);
+  return new ClaudeDecider(config);
 }

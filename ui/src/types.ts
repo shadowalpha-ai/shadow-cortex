@@ -120,6 +120,8 @@ export type Constraint = EntryRule["constraints"][number];
 export type ConstraintOp = Constraint["op"];
 
 export interface SettingsResponse {
+  /** Non-blocking heads-ups about this machine (e.g. decider claude, no key). */
+  warnings?: ValidationIssue[];
   active: Settings;
   saved: { raw: unknown | null; path: string; exists: boolean; revision: string | null };
   pendingRestart: boolean;

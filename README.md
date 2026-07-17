@@ -30,6 +30,7 @@ risk. It is not supported by ShadowAlpha the company.
 - [Environment variables](#environment-variables)
 - [Connecting your accounts (no terminal needed)](#connecting-your-accounts-no-terminal-needed)
 - [Using it for real (paper first)](#using-it-for-real-paper-first)
+- [Turning on the AI decider](#turning-on-the-ai-decider)
 - [Driving the engine from Claude Desktop (or any MCP client)](#driving-the-engine-from-claude-desktop-or-any-mcp-client)
 - [Extending it](#extending-it)
 - [Repository map](#repository-map)
@@ -395,9 +396,8 @@ Everything connects from the dashboard's **Settings → Connections** panel:
    Robinhood is connected, set `"quoteSource": "broker"` to price positions
    at the broker's own transactable quote; `"shadowalpha"` also works as an
    external feed if you want live prices without a broker connection.
-3. **AI decisions (optional):** set `"decider": "claude"` and export
-   `ANTHROPIC_API_KEY`. Without a key the engine falls back to the
-   deterministic rules decider: fail closed, never fail open.
+3. **AI decisions (optional):** switch the decider to Claude — see
+   [Turning on the AI decider](#turning-on-the-ai-decider) below.
 4. **Paper-trade it** for as long as it takes to trust your profile. The
    PaperBroker fills at real quotes and books P&L in `state/`.
 5. **Live monitoring & trading (Robinhood).** The live broker is the official
@@ -424,6 +424,55 @@ Everything connects from the dashboard's **Settings → Connections** panel:
    error names the connect command). Order-response shapes and token lifetime
    under unattended polling are still being verified; keep `execution` at
    `off`/`confirm` and stakes small.
+
+## Turning on the AI decider
+
+By default the deterministic `rules` decider picks entries from your rule
+cards. The optional `claude` decider replaces that step with a Claude model:
+it receives the fresh signals, your positions, and current quotes, and
+proposes entries with a one-sentence rationale. Three things stay true no
+matter which decider runs: it can only *propose* (the execution gate enforces
+every cap and the confirm gate), long-only is enforced in code after the
+model responds, and exits always run as code.
+
+Enabling it takes three steps; the middle one has a trap.
+
+1. **Get an API key** at console.anthropic.com. This is metered API billing,
+   separate from a Claude subscription. The key never goes in a profile or
+   the dashboard; the engine reads it from the environment only.
+2. **Launch the engine from a shell that has the key.** The trap: the
+   dashboard's Restart button respawns the engine with the environment it
+   was *originally launched* with, so exporting the key in a new terminal
+   and clicking Restart changes nothing. Stop the engine, then:
+
+   ```
+   export ANTHROPIC_API_KEY=sk-ant-...
+   npm run dev
+   ```
+3. **Flip the decider and restart.** Any surface works: Settings → Mode &
+   execution → Decider → `claude`, then Save and Restart; or ask your
+   connected AI to do it via `save_strategy`; or edit `"decider"` in the
+   profile directly.
+
+**Verify it took:** the Monitor status line shows `decider claude`, and new
+proposals carry `claude` as their decider. If the key isn't visible to the
+engine, it boots anyway on the rules decider (fail closed) and the dashboard
+shows a heads-up banner naming exactly this problem.
+
+**Cost controls (you own them, like every cap):** the decider is called only
+when new signals arrive, never on a timer, and two brakes in the profile's
+`claude` block bound the worst case. `minSecondsBetweenCalls` (default 30)
+collapses a burst of signals into one batched call: deferred signals wait in
+the window and are decided together when the interval passes, delayed but
+never dropped. `maxCallsPerDay` (default 500) stops AI decisions for the
+rest of the UTC day once spent; each blocked symbol shows up in the Event
+feed as `entry_skipped` saying the budget is exhausted. Set either to `null`
+to disable. Note: with a key exported, the *narrator* also starts using the
+LLM to phrase proposal rationales (one call per proposal, template fallback
+on any failure) — that happens even under the rules decider.
+
+Start in **paper mode with `execution: "confirm"`** and read its rationales
+for a while before you let it near real money.
 
 ## Driving the engine from Claude Desktop (or any MCP client)
 

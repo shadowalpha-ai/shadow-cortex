@@ -101,6 +101,13 @@ const SHADOWALPHA_RATE_BUDGET = (callsPerMin: number, minPollMs: number): string
   `it WILL be rate-limited all day (each portfolio costs one call per intake poll). ` +
   `Raise cadence.intakePollMs to at least ${minPollMs} or follow fewer portfolios.`;
 
+export const DECIDER_CLAUDE_NO_KEY =
+  'decider "claude" is selected but ANTHROPIC_API_KEY is not set in the ' +
+  "engine's environment, so the engine will run the deterministic rules " +
+  "decider instead (fail closed). Export the key in the shell that LAUNCHES " +
+  "the engine; the dashboard's Restart button reuses the launch environment, " +
+  "so a key exported in a new terminal needs a full stop + relaunch.";
+
 export const LIVE_SA_ENRICHMENT_FIXTURE =
   "entry rules use conviction.*/predictions.* fields but ShadowAlpha enrichment is on " +
   "demo data — live mode must not decide on fixture analysis. Switch the ShadowAlpha " +
@@ -168,6 +175,19 @@ export function runnableIssues(settings: Settings): ValidationIssue[] {
     }
   }
   return issues;
+}
+
+/**
+ * Non-blocking heads-ups: true about this machine right now, but not worth
+ * refusing to run over (the engine has a safe fallback). Shown by the
+ * dashboard, the validate CLI, and get_strategy.
+ */
+export function runnableWarnings(settings: Settings): ValidationIssue[] {
+  const warnings: ValidationIssue[] = [];
+  if (settings.decider === "claude" && !process.env.ANTHROPIC_API_KEY) {
+    warnings.push({ path: "decider", message: DECIDER_CLAUDE_NO_KEY });
+  }
+  return warnings;
 }
 
 export function formatIssues(issues: ValidationIssue[]): string {
