@@ -8,6 +8,13 @@ positions with customizable exit logic, and routes paper or live orders
 through a guarded execution layer, all driven by a single settings file that
 IS your strategy.
 
+Shadow Cortex is built first and foremost to interface with
+**[ShadowAlpha](https://shadowalpha.ai)** and trade on its signals: analyst
+predictions with track records, the buzz scanner, AI conviction analysis, and
+the portfolios/curations you follow all stream in over ShadowAlpha's MCP as
+the engine's native signal feeds. Any other source can plug in through the
+same adapter contract.
+
 This is a **reference implementation and a free giveaway**, not a product or a
 service. You hold your own keys, you run it yourself, and you bear your own
 risk. It is not supported by ShadowAlpha the company.
